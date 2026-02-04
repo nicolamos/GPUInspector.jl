@@ -1,7 +1,7 @@
 name = "GPUInspector"
 uuid = "608d808f-ff79-47b0-a25d-21f2c9b42853"
-authors = ["Carsten Bauer <carsten.bauer@uni-paderborn.de> and contributors"]
 version = "0.3.0-DEV"
+authors = ["Carsten Bauer <carsten.bauer@uni-paderborn.de> and contributors"]
 
 [deps]
 CpuId = "adafc99b-e345-5852-983c-f28acb93d879"
@@ -28,7 +28,7 @@ CUDAExt = "CUDA"
 CairoMakieExt = "CairoMakie"
 
 [compat]
-CUDA = "3.8.4, 3.12, 4.4"
+CUDA = "3.8.4, 3.12, 4.4, 5"
 CairoMakie = "0.7, 0.10.7, 0.11, 0.12"
 CpuId = "0.3"
 DocStringExtensions = "0.9"
