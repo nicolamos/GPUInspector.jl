@@ -28,8 +28,8 @@ CUDAExt = "CUDA"
 CairoMakieExt = "CairoMakie"
 
 [compat]
+CairoMakie = "0.7, 0.10.7, 0.11, 0.12, 0.15"
 CUDA = "3.8.4, 3.12, 4.4, 5"
-CairoMakie = "0.7, 0.10.7, 0.11, 0.12"
 CpuId = "0.3"
 DocStringExtensions = "0.9"
 Glob = "1.3"
