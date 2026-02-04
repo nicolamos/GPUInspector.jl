@@ -1,7 +1,7 @@
 name = "GPUInspector"
 uuid = "608d808f-ff79-47b0-a25d-21f2c9b42853"
-authors = ["Carsten Bauer <carsten.bauer@uni-paderborn.de> and contributors"]
 version = "0.3.0-DEV"
+authors = ["Carsten Bauer <carsten.bauer@uni-paderborn.de> and contributors"]
 
 [deps]
 CpuId = "adafc99b-e345-5852-983c-f28acb93d879"
@@ -37,7 +37,7 @@ HDF5 = "0.16"
 NVTX = "0.3"
 Reexport = "1.2"
 TestItemRunner = "0.2"
-ThreadPinning = "0.3, 0.4, 0.5, 0.6, 0.7"
+ThreadPinning = "0.3, 0.4, 0.5, 0.6, 0.7, 1"
 UnicodePlots = "2.8, 3"
 julia = "1.9"
 
