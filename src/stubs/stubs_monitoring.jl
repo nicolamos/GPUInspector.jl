@@ -76,9 +76,6 @@ livemonitor_powerusage(::Backend, args...; kwargs...) = not_implemented_yet()
 Save plots of the quantities specified through `symbols` of a `MonitoringResults` object to disk.
 **Note:** Only available if CairoMakie.jl is loaded next to GPUInspector.jl.
 """
-function savefig_monitoring_results(r::MonitoringResults, args...; kwargs...)
-    return error("You need to load CairoMakie.jl first.")
-end
-function savefig_monitoring_results(filename::String, r::MonitoringResults; kwargs...)
+function savefig_monitoring_results(args...; kwargs...)
     return error("You need to load CairoMakie.jl first.")
 end
