@@ -1,10 +1,10 @@
 module CairoMakieExt
 
 using GPUInspector
-import GPUInspector: MonitoringResults, _defaultylims, _symbol2title_and_label
+import GPUInspector: MonitoringResults, _defaultylims, _symbol2title_and_label, savefig_monitoring_results
 using CairoMakie
 
-function GPUInspector.savefig_monitoring_results(
+function savefig_monitoring_results(
     r::MonitoringResults, symbols=keys(r.results); ext=:pdf
 )
     for s in symbols
@@ -13,7 +13,7 @@ function GPUInspector.savefig_monitoring_results(
     return nothing
 end
 
-function GPUInspector.savefig_monitoring_results(r::MonitoringResults, s::Symbol; ext=:pdf)
+function savefig_monitoring_results(r::MonitoringResults, s::Symbol; ext=:pdf)
     times = r.times
     values = r.results[s]
     title, ylabel = _symbol2title_and_label(s)
