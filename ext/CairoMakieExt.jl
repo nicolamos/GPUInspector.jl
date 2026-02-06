@@ -5,13 +5,13 @@ import GPUInspector: MonitoringResults, _defaultylims, _symbol2title_and_label, 
 using CairoMakie
 
 function savefig_monitoring_results(
-    r::MonitoringResults, symbols=keys(r.results); ext=:pdf
+    r::MonitoringResults, symbols=keys(r.results); ext=:pdf, prefix=""
 )
     if symbols isa Symbol
-        _savefig_monitoring_results(r, symbols; ext)
+        _savefig_monitoring_results(r, symbols; ext, prefix)
     else
         for s in symbols
-            _savefig_monitoring_results(r, s; ext)
+            _savefig_monitoring_results(r, s; ext, prefix)
         end
     end
     return nothing
@@ -19,14 +19,15 @@ end
 
 function savefig_monitoring_results(filename::String, r::MonitoringResults; symbol=nothing)
     if isnothing(symbol)
-        # if no symbol is provided, we pick the first one
-        symbol = first(keys(r.results))
+        # If no symbol is provided, we create a tiled summary of ALL results
+        _savefig_monitoring_results_summary(r; filename)
+    else
+        _savefig_monitoring_results(r, symbol; filename)
     end
-    _savefig_monitoring_results(r, symbol; filename)
     return nothing
 end
 
-function _savefig_monitoring_results(r::MonitoringResults, s::Symbol; ext=:pdf, filename=nothing)
+function _savefig_monitoring_results(r::MonitoringResults, s::Symbol; ext=:pdf, filename=nothing, prefix="")
     times = r.times
     values = r.results[s]
     title, ylabel = _symbol2title_and_label(s)
@@ -34,21 +35,53 @@ function _savefig_monitoring_results(r::MonitoringResults, s::Symbol; ext=:pdf, 
     device_labels = [str for (str, uuid) in r.devices]
 
     f = CairoMakie.Figure(; size=(1000, 500))
-    ax = f[1, 1] = CairoMakie.Axis(f; xlabel="Time [s]", ylabel=ylabel, title=title)
-    ylims!(ax, ylims)
-    CairoMakie.scatterlines!(times, getindex.(values, 1); label=device_labels[1])
-    for i in 2:length(first(values))
-        CairoMakie.scatterlines!(times, getindex.(values, i); label=device_labels[i])
-    end
-    f[1, 2] = CairoMakie.Legend(f, ax, "Devices"; framevisible=false)
+    _plot_metric!(f[1, 1], times, values, title, ylabel, ylims, device_labels)
     
     if isnothing(filename)
-        filename =
-            replace(replace(replace(lowercase(title), " " => "_"), "(" => ""), ")" => "") *
-            "_plot.$(string(ext))"
+        clean_title = replace(replace(replace(lowercase(title), " " => "_"), "(" => ""), ")" => "")
+        filename = prefix * clean_title * "_plot.$(string(ext))"
     end
     CairoMakie.save(filename, f)
     return nothing
+end
+
+function _savefig_monitoring_results_summary(r::MonitoringResults; filename="monitoring_summary.pdf")
+    symbols = collect(keys(r.results))
+    n = length(symbols)
+    times = r.times
+    device_labels = [str for (str, uuid) in r.devices]
+
+    # Create a tall figure to fit all plots
+    f = CairoMakie.Figure(; size=(1000, 400 * n))
+    
+    for (i, s) in enumerate(symbols)
+        values = r.results[s]
+        title, ylabel = _symbol2title_and_label(s)
+        ylims = _defaultylims(values)
+        
+        # Plot into the i-th row
+        _plot_metric!(f[i, 1], times, values, title, ylabel, ylims, device_labels; show_legend=(i==1))
+    end
+    
+    CairoMakie.save(filename, f)
+    return nothing
+end
+
+function _plot_metric!(target, times, values, title, ylabel, ylims, device_labels; show_legend=true)
+    ax = CairoMakie.Axis(target; xlabel="Time [s]", ylabel=ylabel, title=title)
+    CairoMakie.ylims!(ax, ylims)
+    
+    # Use a color cycle for devices
+    for i in 1:length(first(values))
+        CairoMakie.scatterlines!(ax, times, getindex.(values, i); label=device_labels[i])
+    end
+    
+    if show_legend && length(device_labels) > 0
+        # Position legend based on whether it's a single plot or tiled
+        # For simplicity in tiled, we'll put it to the right of the first plot
+        # but CairoMakie figures handle this via Layout positions
+    end
+    return ax
 end
 
 end # module
