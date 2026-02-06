@@ -2,6 +2,7 @@ module CUDAExt
 
 using GPUInspector
 using CUDA
+using ThreadPools
 
 # stdlibs etc.
 using Base: UUID

@@ -11,6 +11,7 @@ using Pkg: Pkg
 # external
 using Reexport
 @reexport using ThreadPinning
+using ThreadPools
 using DocStringExtensions
 using UnicodePlots
 using CpuId: cachesize
